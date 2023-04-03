@@ -1,8 +1,10 @@
+--Creación bases de datos
 CREATE DATABASE "databaselibreria"
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1;
+--Creación tablas
 CREATE TABLE public.clientes
 (
     id integer,
@@ -73,7 +75,7 @@ ALTER TABLE IF EXISTS public.libro_pedido
 ALTER TABLE IF EXISTS public.libro_pedido
     ADD PRIMARY KEY (id_libros, ejemplar);
 
-
+--Creación datos prueba
 INSERT INTO public.clientes(
 		id, nombre, direccion, email)
 		VALUES  (10001, 'Diego', 'Calle 21-3', 'diego@gmail.com'),
@@ -104,5 +106,16 @@ INSERT INTO public.libro_pedido(
 	VALUES (1, 1, 1), (2,1,1), (3,1,1), (1,2,2),(5,2,1) ,(1,3,3);
 
 
-
+-- Consultas
 SELECT sum(precio)/count(libros) FROM public.libros
+
+SELECT libros.titulo,  SUM(libro_pedido.ejemplar) 
+FROM libros
+INNER JOIN libro_pedido ON libros.id_libro = libro_pedido.id_libros
+INNER JOIN pedidos ON libro_pedido.id_pedido = pedidos.id_pedido
+WHERE (date_part('year', pedidos.fecha) = 2023) AND (date_part('month', pedidos.fecha) = 4)
+GROUP BY libros.titulo
+ORDER By SUM(libro_pedido.ejemplar) DESC
+
+SELECT titulo, precio, precio*0.19 AS iva, precio+precio*0.19 AS precio_total
+FROM libros;
