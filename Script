@@ -107,7 +107,7 @@ INSERT INTO public.libro_pedido(
 
 
 -- Consultas
-SELECT sum(precio)/count(libros) FROM public.libros
+SELECT sum(precio)/count(libros) FROM public.libros;
 
 SELECT libros.titulo,  SUM(libro_pedido.ejemplar) 
 FROM libros
@@ -115,7 +115,7 @@ INNER JOIN libro_pedido ON libros.id_libro = libro_pedido.id_libros
 INNER JOIN pedidos ON libro_pedido.id_pedido = pedidos.id_pedido
 WHERE (date_part('year', pedidos.fecha) = 2023) AND (date_part('month', pedidos.fecha) = 4)
 GROUP BY libros.titulo
-ORDER By SUM(libro_pedido.ejemplar) DESC
+ORDER By SUM(libro_pedido.ejemplar) DESC;
 
 SELECT titulo, precio, precio*0.19 AS iva, precio+precio*0.19 AS precio_total
 FROM libros;
