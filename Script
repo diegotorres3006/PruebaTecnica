@@ -1,0 +1,109 @@
+CREATE DATABASE "databaselibreria"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+CREATE TABLE public.clientes
+(
+    id integer,
+    nombre character varying,
+    direccion character varying,
+    email character varying,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS public.clientes
+    OWNER to postgres;
+
+CREATE TABLE public.libros
+(
+    id_libro integer,
+    titulo character varying,
+    autor character varying,
+    genero character varying,
+    descripcion character varying,
+    precio double precision,
+    cantidad integer,
+    PRIMARY KEY (id_libro)
+);
+
+ALTER TABLE IF EXISTS public.libros
+    OWNER to postgres;
+
+
+CREATE TABLE public.pedidos
+(
+    id_pedido integer,
+    id_cliente integer,
+    fecha date,
+    PRIMARY KEY (id_pedido),
+    CONSTRAINT id_cliente FOREIGN KEY (id_cliente)
+        REFERENCES public.clientes (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+
+CREATE TABLE public.libro_pedido
+(
+    id_libros integer,
+    id_pedido integer,
+    CONSTRAINT id_libro FOREIGN KEY (id_libros)
+        REFERENCES public.libros (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+ALTER TABLE IF EXISTS public.libro_pedido
+    OWNER to postgres;
+ALTER TABLE IF EXISTS public.libro_pedido
+    ADD CONSTRAINT id_pedido FOREIGN KEY (id_pedido)
+    REFERENCES public.pedidos (id_pedido) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+
+
+ALTER TABLE IF EXISTS public.libro_pedido
+    ADD COLUMN ejemplar integer;
+ALTER TABLE IF EXISTS public.libro_pedido
+    ADD PRIMARY KEY (id_libros, ejemplar);
+
+
+INSERT INTO public.clientes(
+		id, nombre, direccion, email)
+		VALUES  (10001, 'Diego', 'Calle 21-3', 'diego@gmail.com'),
+				(10002, 'Gabriel', 'Calle 2-5', 'gab2@gmail.com'),
+				(10003, 'AndrÃ©s', 'Carrera 1-50', 'and3@gmail.com'),
+				(10004, 'Ana', 'Carrera 2-2', 'ana4@gmail.com'),
+				(10005, 'Sofia', 'Avenida 90-3', 'sofia@gmail.com'),
+				(10006, 'Jose', 'Calle 27-7', 'jo27@gmail.com')
+		;
+
+INSERT INTO public.libros(
+	id_libro, titulo, autor, genero, descripcion, precio, cantidad)
+	VALUES (1, '100 años de soledad', 'Gabriel Garcia', 'Realismo magico', 'dgdhhsh', 25000, 10),
+		   (2, 'Divina comedia', 'Dante', 'Ficción', 'dgdhhsh', 43000, 50),
+		   (3, 'La Odisea', 'Homero', 'Ficcón', 'dgdhhsh', 13000, 7),
+		   (4, 'La Iliada', 'Homero', 'Ficción', 'dgdhhsh', 21000, 10),
+		   (5, '1000 y una noche', 'Anonimo', 'Ficción', 'dgdhhsh', 5000, 7)
+	
+	
+	;
+
+
+INSERT INTO public.pedidos(
+	id_pedido, id_cliente, fecha)
+	VALUES (1, 10001, '2022-04-3'), (2, 10002, '2022-04-3'), (3, 10002, '2022-04-3'), (4, 10003, '2022-04-5');
+
+INSERT INTO public.libro_pedido(
+	id_libros, id_pedido, ejemplar)
+	VALUES (1, 1, 1), (2,1,1), (3,1,1), (1,2,2),(5,2,1) ,(1,3,3);
+
+
+
+SELECT sum(precio)/count(libros) FROM public.libros
