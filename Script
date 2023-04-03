@@ -95,10 +95,9 @@ INSERT INTO public.libros(
 	
 	;
 
-
 INSERT INTO public.pedidos(
 	id_pedido, id_cliente, fecha)
-	VALUES (1, 10001, '2022-04-3'), (2, 10002, '2022-04-3'), (3, 10002, '2022-04-3'), (4, 10003, '2022-04-5');
+	VALUES (1, 10001, '2023-04-3'), (2, 10002, '2023-04-3'), (3, 10002, '2023-04-3'), (4, 10003, '2023-04-5');
 
 INSERT INTO public.libro_pedido(
 	id_libros, id_pedido, ejemplar)
